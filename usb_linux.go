@@ -141,7 +141,7 @@ func slice(devices **C.struct_libusb_device, cnt C.ssize_t) []*C.libusb_device {
 	return slice
 }
 
-func (d *usbDevice) write(data []byte) error {
+func (d *usbDevice) write(c command) error {
 	if d.handle == nil {
 		return errors.New("usb device has not been opend")
 	}
@@ -150,17 +150,19 @@ func (d *usbDevice) write(data []byte) error {
 	const index = 0
 	const timeout = 5000
 
+	data := c.bytes()
+	n := len(data)
 	written := C.libusb_control_transfer(d.handle,
 		C.uint8_t(hidEndpointOut|hidRecipientInterface|hidRequestTypeClass),
 		C.uint8_t(hidSetReport),
 		C.uint16_t(reportId),
 		C.uint16_t(index),
 		(*C.uchar)(&data[0]),
-		C.uint16_t(len(data)),
+		C.uint16_t(n),
 		C.uint(timeout),
 	)
 
-	if int(written) == len(data) {
+	if int(written) == n {
 		return nil
 	}
 

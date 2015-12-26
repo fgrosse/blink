@@ -3,6 +3,7 @@ package blink
 import (
 	"errors"
 	"fmt"
+	"time"
 )
 
 const (
@@ -14,27 +15,27 @@ var NoDeviceErr = errors.New("could not find blink1 device")
 
 type LED struct {
 	*usbDevice
-	info usbDeviceInfo
+
+	ID byte // ID signals which LED to address: 0=all, 1=led#1, 2=led#2, etc. (mk2 only)
 }
 
 func New() (*LED, error) {
 	l := LED{}
 
 	found := false
-	for di := range usbDevices() {
+	var di usbDeviceInfo
+	for di = range usbDevices() {
 		if di.vendorId == VendorNumber && di.productId == ProductNumber {
-			l.info = di
 			found = true
 			break
 		}
 	}
-
 	if !found {
 		return nil, NoDeviceErr
 	}
 
 	var err error
-	l.usbDevice, err = l.info.open()
+	l.usbDevice, err = di.open()
 	if err != nil {
 		return nil, fmt.Errorf("could not open blink1 device: %s", err)
 	}
@@ -49,17 +50,13 @@ func (l *LED) Close() {
 }
 
 func (l *LED) SetRGB(r, g, b byte) error {
-	buf := make([]byte, 8)
+	return l.write(&setRGBCommand{rgb{r, g, b}})
+}
 
-	buf[0] = 1
-	buf[1] = 'n'
-	buf[2] = r
-	buf[3] = g
-	buf[4] = b
-	buf[5] = 0
-	buf[6] = 0
-	buf[7] = 0
-
-	fmt.Printf("Sending: %#x\n", buf)
-	return l.write(buf)
+func (l *LED) FadeRGB(r, g, b byte, d time.Duration) error {
+	return l.write(&fadeRGBCommand{
+		rgb: rgb{r, g, b},
+		duration: d,
+		n: l.ID,
+	})
 }
