@@ -1,6 +1,6 @@
+// +build linux
 package blink
 
-// +build linux
 // #cgo pkg-config: libusb-1.0
 // #cgo LDFLAGS: -lusb-1.0
 // #include <libusb-1.0/libusb.h>
