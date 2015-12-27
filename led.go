@@ -19,6 +19,9 @@ const (
 // ErrNoDevice is the error that New() returns if no connected blink(1) device was found.
 var ErrNoDevice = errors.New("could not find blink1 device")
 
+// Color contains the 24-bit RGB color information.
+type Color struct{ r, g, b byte }
+
 // LED represents a locally connected blink(1) USB device.
 type LED struct {
 	*usbDevice
@@ -70,14 +73,28 @@ func (l *LED) Close() error {
 
 // SetRGB lights up the blink(1) with the specified RGB color immediately.
 func (l *LED) SetRGB(r, g, b byte) error {
-	return l.write(&setRGBCommand{rgb{r, g, b}})
+	_, err := l.write(&setRGBCommand{Color{r, g, b}})
+	return err
 }
 
 // FadeRGB lights up the blink(1) with the specified RGB color, fading to that color over a specified duration.
 func (l *LED) FadeRGB(r, g, b byte, d time.Duration) error {
-	return l.write(&fadeRGBCommand{
-		rgb:      rgb{r, g, b},
+	_, err := l.write(&fadeRGBCommand{
+		Color:    Color{r, g, b},
 		duration: d,
 		n:        l.ID,
 	})
+
+	return err
+}
+
+// ReadRGB reads the currently active color of the blink(1) device.
+// Will return meaningful results for mk2 devices only.
+func (l *LED) ReadRGB() (Color, error) {
+	buf, err := l.read(&readRGBCommand{})
+	if err != nil {
+		return Color{}, err
+	}
+
+	return Color{r: buf[2], g: buf[3], b: buf[4]}, nil
 }

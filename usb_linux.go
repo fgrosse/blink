@@ -11,6 +11,7 @@ import (
 	"fmt"
 	"reflect"
 	"strings"
+	"time"
 	"unsafe"
 )
 
@@ -18,8 +19,13 @@ const (
 	hidRequestTypeClass   = (0x01 << 5)
 	hidRecipientInterface = 0x01
 	hidEndpointOut        = 0x00
+	hidEndpointIn         = 0x80
+	hidGetReport          = 0x01
 	hidSetReport          = 0x09
 )
+
+// USBTimeOut is the maximum duration a call to the USB device can take before it will result in an error.
+var USBTimeOut = 1 * time.Second
 
 func init() {
 	C.libusb_init(nil)
@@ -142,32 +148,43 @@ func slice(devices **C.struct_libusb_device, cnt C.ssize_t) []*C.libusb_device {
 	return slice
 }
 
-func (d *usbDevice) write(c command) error {
-	if d.handle == nil {
-		return errors.New("usb device has not been opend")
-	}
+func (d *usbDevice) write(c command) ([]byte, error) {
+	return d.readWrite(c,
+		hidEndpointOut|hidRecipientInterface|hidRequestTypeClass,
+		hidSetReport,
+	)
+}
 
-	const reportId = 1
-	const index = 0
-	const timeout = 5000
+func (d *usbDevice) read(c command) ([]byte, error) {
+	return d.readWrite(c,
+		hidEndpointIn|hidRecipientInterface|hidRequestTypeClass,
+		hidGetReport,
+	)
+}
+
+func (d *usbDevice) readWrite(c command, bmRequestType, bRequest int) ([]byte, error) {
+	if d.handle == nil {
+		return nil, errors.New("usb device has not been opend")
+	}
 
 	data := c.bytes()
 	n := len(data)
+
 	written := C.libusb_control_transfer(d.handle,
-		C.uint8_t(hidEndpointOut|hidRecipientInterface|hidRequestTypeClass),
-		C.uint8_t(hidSetReport),
-		C.uint16_t(reportId),
-		C.uint16_t(index),
+		C.uint8_t(bmRequestType),
+		C.uint8_t(bRequest),
+		C.uint16_t(reportID),
+		C.uint16_t(0),
 		(*C.uchar)(&data[0]),
 		C.uint16_t(n),
-		C.uint(timeout),
+		C.uint(USBTimeOut /time.Millisecond),
 	)
 
 	if int(written) == n {
-		return nil
+		return data, nil
 	}
 
-	return usbError(written)
+	return data, usbError(written)
 }
 
 func (d *usbDevice) close() {

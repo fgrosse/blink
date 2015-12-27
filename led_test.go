@@ -6,5 +6,5 @@ import (
 )
 
 func TestLEDImplementsIoCloser(t *testing.T) {
-	var _ io.Closer = LED{}
+	var _ io.Closer = new(LED)
 }
