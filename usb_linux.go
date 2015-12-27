@@ -27,7 +27,7 @@ func init() {
 
 type usbDeviceInfo struct {
 	path                string
-	vendorId, productId uint16
+	vendorID, productID uint16
 }
 
 type usbDevice struct {
@@ -107,8 +107,8 @@ func readDeviceInfo(dev *C.libusb_device) (di usbDeviceInfo, err error) {
 
 	return usbDeviceInfo{
 		path:      fmt.Sprintf("%.4x:%.4x:%s", desc.idVendor, desc.idProduct, numbers),
-		vendorId:  uint16(desc.idVendor),
-		productId: uint16(desc.idProduct),
+		vendorID:  uint16(desc.idVendor),
+		productID: uint16(desc.idProduct),
 	}, nil
 }
 

@@ -7,19 +7,19 @@ import (
 )
 
 const (
-	// The VendorNumber as defined in github.com/todbot/blink1
+	// VendorNumber is the USB vendor identifier as defined in github.com/todbot/blink1
 	// https://github.com/todbot/blink1/blob/3c51231d302d7676c50f28debaf82adc5bfa9460/commandline/blink1-lib.h#L30
 	VendorNumber = 0x27B8
 
-	// The ProductNumber as defined in github.com/todbot/blink1
+	// ProductNumber is the USB device identifier as defined in github.com/todbot/blink1
 	// https://github.com/todbot/blink1/blob/3c51231d302d7676c50f28debaf82adc5bfa9460/commandline/blink1-lib.h#L31
 	ProductNumber = 0x01ED
 )
 
-// NoDeviceErr is the error that New() returns if no connected blink(1) device was found.
-var NoDeviceErr = errors.New("could not find blink1 device")
+// ErrNoDevice is the error that New() returns if no connected blink(1) device was found.
+var ErrNoDevice = errors.New("could not find blink1 device")
 
-// LED represents a localy connected blink(1) USB device.
+// LED represents a locally connected blink(1) USB device.
 type LED struct {
 	*usbDevice
 
@@ -39,13 +39,13 @@ func New() (*LED, error) {
 	found := false
 	var di usbDeviceInfo
 	for di = range usbDevices() {
-		if di.vendorId == VendorNumber && di.productId == ProductNumber {
+		if di.vendorID == VendorNumber && di.productID == ProductNumber {
 			found = true
 			break
 		}
 	}
 	if !found {
-		return nil, NoDeviceErr
+		return nil, ErrNoDevice
 	}
 
 	var err error
