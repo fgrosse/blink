@@ -8,5 +8,11 @@ go:
   - 1.5
   - tip
 
+before_install:
+  - sudo apt-get update -qq
+
+install:
+  - apt-get install -y libusb-dev
+
 script:
   - go test -v github.com/fgrosse/blink
