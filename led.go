@@ -1,3 +1,4 @@
+// Package blink provides an interface to ThingM blink(1) USB RGB LEDs
 package blink
 
 import (
