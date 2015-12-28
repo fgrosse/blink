@@ -9,7 +9,7 @@ go:
   - tip
 
 before_install:
-  - sudo apt-get update -qq
+  - apt-get update -qq
 
 install:
   - apt-get install -y libusb-dev
