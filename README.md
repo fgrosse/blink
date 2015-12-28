@@ -1,6 +1,5 @@
 # blink
 
-[![Build Status](https://travis-ci.org/fgrosse/blink.svg?branch=master)](https://travis-ci.org/fgrosse/blink)
 [![GoDoc](https://godoc.org/github.com/fgrosse/blink?status.svg)](https://godoc.org/github.com/fgrosse/blink)
 
 blink is a go implementation for controlling [ThingM blink(1) USB dual RGB LEDs][1].
