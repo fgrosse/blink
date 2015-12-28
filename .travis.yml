@@ -1,5 +1,5 @@
 language: go
-sudo: false
+sudo: true
 
 go:
   - 1.2
@@ -9,10 +9,10 @@ go:
   - tip
 
 before_install:
-  - apt-get update -qq
+  - sudo apt-get update -qq
 
 install:
-  - apt-get install -y libusb-dev
+  - sudo apt-get install -y libusb-dev
 
 script:
   - go test -v github.com/fgrosse/blink
