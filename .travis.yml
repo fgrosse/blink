@@ -8,5 +8,26 @@ go:
   - 1.5
   - tip
 
+cache:
+  directories:
+    - libusb-1.0.20
+
+addons:
+  apt:
+    packages:
+      # version is too old on ubuntu precise (need libusb-dev >= 1.0.12)
+      # - libusb-1.0-0-dev
+
+      # stuff we need to build libusb
+      - libudev-dev
+
+install:
+  # install recent version of libusb
+  - wget -qO- https://github.com/libusb/libusb/releases/download/v1.0.20/libusb-1.0.20.tar.bz2 | tar xvj
+  - cd libusb-1.0.20 && ./configure --prefix=$(pwd)/.. && make && make install
+
+  # install our go test dependencies
+  - go get github.com/stretchr/testify/...
+
 script:
-  - go test -v github.com/fgrosse/blink
+  - PKG_CONFIG_PATH=lib/pkgconfig LD_LIBRARY_PATH=lib C_INCLUDE_PATH=include go test -v github.com/fgrosse/blink
