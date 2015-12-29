@@ -2,6 +2,7 @@
 
 [![Build Status](https://travis-ci.org/fgrosse/blink.svg?branch=master)](https://travis-ci.org/fgrosse/blink)
 [![GoDoc](https://godoc.org/github.com/fgrosse/blink?status.svg)](https://godoc.org/github.com/fgrosse/blink)
+[![License](https://img.shields.io/badge/license-MIT-4183c4.svg)](https://github.com/fgrosse/blink/blob/master/LICENSE)
 
 blink is a go implementation for controlling [ThingM blink(1) USB dual RGB LEDs][1].
 
@@ -26,7 +27,7 @@ Eventually all of the [available HID commands will be implemented][2]
 
 ## Installation
 
-Currently blink does only compile on linux and **requires libusb-1.0**.
+Currently blink does only compile on **linux** and requires **[libusb-1.0.12][5] or higher**.
 
 Use `go get` to install blink:
 ```
@@ -75,3 +76,4 @@ Please keep in mind that I might not always be able to respond immediately but I
 [2]: https://github.com/ThingM/blink1/blob/master/docs/blink1-hid-commands.md
 [3]: https://github.com/ThingM/blink1
 [4]: https://github.com/ThingM/blink1/tree/master/go/GoBlink
+[5]: https://github.com/libusb/libusb
