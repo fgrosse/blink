@@ -10,7 +10,6 @@ go:
 
 cache:
   directories:
-    - lib
     - libusb-1.0.20
 
 addons:

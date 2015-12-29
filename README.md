@@ -28,6 +28,8 @@ Eventually all of the [available HID commands will be implemented][2]
 ## Installation
 
 Currently blink does only compile on **linux** and requires **[libusb-1.0.12][5] or higher**.
+blink is build on travis using libusb 1.0.20. Refer to the [`.travis.yml`](.travis.yml) to it can be built on ubuntu.
+On Fedora 22 you can simply use `dnf install libusb-devel`.
 
 Use `go get` to install blink:
 ```
