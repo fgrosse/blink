@@ -26,10 +26,9 @@ install:
   # install recent version of libusb
   - wget -qO- https://github.com/libusb/libusb/releases/download/v1.0.20/libusb-1.0.20.tar.bz2 | tar xvj
   - cd libusb-1.0.20 && ./configure --prefix=$(pwd)/.. && make && make install
-  - mkdir lib/include && ln -s ../../libusb-1.0.20/libusb lib/include/libusb-1.0
 
   # install our go test dependencies
   - go get github.com/stretchr/testify/...
 
 script:
-  - PKG_CONFIG_PATH=lib/pkgconfig LD_LIBRARY_PATH=lib C_INCLUDE_PATH=lib/include go test -v github.com/fgrosse/blink
+  - PKG_CONFIG_PATH=lib/pkgconfig LD_LIBRARY_PATH=lib C_INCLUDE_PATH=include go test -v github.com/fgrosse/blink
