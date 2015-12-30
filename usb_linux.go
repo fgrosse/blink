@@ -78,22 +78,22 @@ func (di usbDeviceInfo) open() (*usbDevice, error) {
 	}
 	defer C.libusb_free_device_list(devices, 1)
 
-	for _, dev := range slice(devices, cnt) {
-		candidate, err := readDeviceInfo(dev)
+	for _, d := range slice(devices, cnt) {
+		candidate, err := readDeviceInfo(d)
 		if err != nil {
 			continue
 		}
+
 		if di.path == candidate.path {
-			var handle *C.libusb_device_handle
-			err := C.libusb_open(dev, &handle)
-			if err != 0 {
-				return nil, usbError(err)
+			dev := &usbDevice{info: candidate}
+
+			var err error
+			result := C.libusb_open(d, &dev.handle)
+			if result != 0 {
+				err = usbError(result)
 			}
-			dev := &usbDevice{
-				info:   candidate,
-				handle: handle,
-			}
-			return dev, nil
+
+			return dev, err
 		}
 	}
 
@@ -177,7 +177,7 @@ func (d *usbDevice) readWrite(c command, bmRequestType, bRequest int) ([]byte, e
 		C.uint16_t(0),
 		(*C.uchar)(&data[0]),
 		C.uint16_t(n),
-		C.uint(USBTimeOut /time.Millisecond),
+		C.uint(USBTimeOut/time.Millisecond),
 	)
 
 	if int(written) == n {

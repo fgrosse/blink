@@ -55,7 +55,7 @@ func New() (*LED, error) {
 	var err error
 	l.usbDevice, err = di.open()
 	if err != nil {
-		return nil, fmt.Errorf("could not open blink1 device: %s", err)
+		return nil, fmt.Errorf("could not open blink1 device %+v: %s", l.usbDevice.info, err)
 	}
 
 	return &l, nil
