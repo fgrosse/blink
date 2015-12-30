@@ -65,7 +65,7 @@ func New() (*LED, error) {
 // The function is idempotent and can be called on already closed or never
 // opened devices.
 func (l *LED) Close() error {
-	if l.usbDevice != nil {
+	if l != nil && l.usbDevice != nil {
 		l.close()
 	}
 
