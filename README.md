@@ -64,6 +64,23 @@ fmt.Printf("%#v\n", color)
 err = led.SetRGB(0, 0, 0)
 ```
 
+You need to have root access when running this program or you will get the following error:
+
+```
+could not open blink1 device {path:27b8:01ed:01.03 vendorID:10168 productID:493}: libusb: bad access [code -3]
+```
+
+On linux this problem can easily be fixed by adding the following [udev rule][6]:
+
+```bash
+[root@localhost]# cat /etc/udev/rules.d/10.local.rules
+SUBSYSTEMS=="usb", ATTRS{idVendor}=="27b8", ATTRS{idProduct}=="01ed", SYMLINK+="blink1", GROUP="blink1"
+```
+
+Everybody in the `blink1` group should now be able to access the device directly.
+Additionally this rule creates a symlink at `/dev/blink1` each time you connect the device.
+You probably need to reconnect your device so the change will be visible.
+
 ## Other resources
 
 * [the official ThingM/blink1 github repository with APIs for other languages][3]
@@ -79,3 +96,4 @@ Please keep in mind that I might not always be able to respond immediately but I
 [3]: https://github.com/ThingM/blink1
 [4]: https://github.com/ThingM/blink1/tree/master/go/GoBlink
 [5]: https://github.com/libusb/libusb
+[6]: http://www.reactivated.net/writing_udev_rules.html
