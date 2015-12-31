@@ -1,7 +1,7 @@
 # blink
 
 [![Build Status](https://travis-ci.org/fgrosse/blink.svg?branch=master)](https://travis-ci.org/fgrosse/blink)
-[![GoDoc](https://godoc.org/github.com/fgrosse/blink?status.svg)](https://godoc.org/github.com/fgrosse/blink)
+[![GoDoc](https://godoc.org/gopkg.in/fgrosse/blink.v1?status.svg)](https://godoc.org/gopkg.in/fgrosse/blink.v1)
 [![License](https://img.shields.io/badge/license-MIT-4183c4.svg)](https://github.com/fgrosse/blink/blob/master/LICENSE)
 
 blink is a go implementation for controlling [ThingM blink(1) USB dual RGB LEDs][1].
@@ -33,7 +33,7 @@ On Fedora 22 you can simply use `dnf install libusb-devel`.
 
 Use `go get` to install blink:
 ```
-go get github.com/fgrosse/blink
+go get gopkg.in/fgrosse/blink.v1
 ```
 
 ## Usage
