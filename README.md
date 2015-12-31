@@ -64,10 +64,12 @@ fmt.Printf("%#v\n", color)
 err = led.SetRGB(0, 0, 0)
 ```
 
+### Linux Permissions
+
 You need to have root access when running this program or you will get the following error:
 
 ```
-could not open blink1 device {path:27b8:01ed:01.03 vendorID:10168 productID:493}: libusb: bad access [code -3]
+libusb: bad access [code -3]
 ```
 
 On linux this problem can easily be fixed by adding the following [udev rule][6]:
