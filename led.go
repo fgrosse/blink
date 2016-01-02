@@ -21,7 +21,7 @@ const (
 var ErrNoDevice = errors.New("could not find blink1 device")
 
 // Color contains the 24-bit RGB color information.
-type Color struct{ r, g, b byte }
+type Color struct{ R, G, B byte }
 
 // LED represents a locally connected blink(1) USB device.
 type LED struct {
@@ -97,5 +97,5 @@ func (l *LED) ReadRGB() (Color, error) {
 		return Color{}, err
 	}
 
-	return Color{r: buf[2], g: buf[3], b: buf[4]}, nil
+	return Color{R: buf[2], G: buf[3], B: buf[4]}, nil
 }

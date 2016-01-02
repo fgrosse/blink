@@ -15,7 +15,7 @@ type setRGBCommand struct {
 func (c *setRGBCommand) bytes() []byte {
 	return []byte{reportID,
 		'n',
-		c.r, c.g, c.b,
+		c.R, c.G, c.B,
 		0, 0, 0,
 	}
 }
@@ -30,7 +30,7 @@ func (c *fadeRGBCommand) bytes() []byte {
 	t := c.duration.Nanoseconds() / 1E7
 	return []byte{reportID,
 		'c',
-		c.r, c.g, c.b,
+		c.R, c.G, c.B,
 		byte(t >> 8), byte(t & 0xff),
 		c.n,
 	}
