@@ -53,8 +53,12 @@ d := 500 * time.Millisecond
 led.FadeRGB(0, 255, 0, d)
 time.Sleep(d)
 
+// store colors for later use
+corpBlue := blink.MustParseColor("#3333ff")
+led.Fade(corpBlue, d)
+
 // read the current color
-color, err := led.ReadRGB()
+color, err := led.Read()
 if err != nil {
     panic(err)
 }

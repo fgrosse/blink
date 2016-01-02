@@ -72,26 +72,38 @@ func (l *LED) Close() error {
 	return nil
 }
 
-// SetRGB lights up the blink(1) with the specified RGB color immediately.
+// SetRGB is a handy shortcut to LED.SetRGB(Color{r, g, b})
 func (l *LED) SetRGB(r, g, b byte) error {
-	_, err := l.write(&setRGBCommand{Color{r, g, b}})
+	return l.Set(Color{r, g, b})
+}
+
+// Set lights up the blink(1) with the specified color immediately.
+func (l *LED) Set(c Color) error {
+	_, err := l.write(&setRGBCommand{c})
 	return err
 }
 
-// FadeRGB lights up the blink(1) with the specified RGB color, fading to that color over a specified duration.
+// FadeRGB is a handy shortcut to LED.Fade(Color{r, g, b}, d)
 func (l *LED) FadeRGB(r, g, b byte, d time.Duration) error {
-	_, err := l.write(&fadeRGBCommand{
-		Color:    Color{r, g, b},
-		duration: d,
-		n:        l.ID,
-	})
+	return l.Fade(Color{r, g, b}, d)
+}
 
+// Fade lights up the blink(1) with the specified RGB color, fading to that color over a specified duration.
+func (l *LED) Fade(c Color, d time.Duration) error {
+	_, err := l.write(&fadeRGBCommand{Color: c, duration: d, n: l.ID})
 	return err
 }
 
+// ReadRGB is deprecated and will be removed in v2. Use LED.Read() instead.
 // ReadRGB reads the currently active color of the blink(1) device.
 // Will return meaningful results for mk2 devices only.
 func (l *LED) ReadRGB() (Color, error) {
+	return l.Read()
+}
+
+// Read reads the currently active color of the blink(1) device.
+// Will return meaningful results for mk2 devices only.
+func (l *LED) Read() (Color, error) {
 	buf, err := l.read(&readRGBCommand{})
 	if err != nil {
 		return Color{}, err
