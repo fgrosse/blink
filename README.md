@@ -36,6 +36,8 @@ Use `go get` to install blink:
 go get gopkg.in/fgrosse/blink.v1
 ```
 
+You need to have go version 1.4 or higher.
+
 ## Usage
 
 ```go
