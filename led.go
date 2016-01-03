@@ -69,6 +69,26 @@ func (l *LED) Close() error {
 	return nil
 }
 
+// FadeOutClose can be used to disable all lights on the blink(1) device and then
+// close this LED. The optional fadeDuration argument can be used to let
+// the LED fade out smoothly. If it is omitted a default value if 1s is assumed.
+// Examples:
+//     defer l.FadeOutClose()
+//     defer l.FadeOutClose(500 * time.Millisecond)
+func (l *LED) FadeOutClose(fadeDuration ...time.Duration) error {
+	if l == nil {
+		return nil
+	}
+
+	if len(fadeDuration) > 0 {
+		l.FadeRGB(0, 0, 0, fadeDuration[0])
+	} else {
+		l.FadeRGB(0, 0, 0, 1 * time.Second)
+	}
+
+	return l.Close()
+}
+
 // SetRGB is a handy shortcut to LED.SetRGB(Color{r, g, b})
 func (l *LED) SetRGB(r, g, b byte) error {
 	return l.Set(Color{r, g, b})

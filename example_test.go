@@ -14,8 +14,8 @@ func Example() {
 		panic(err)
 	}
 
-	// make sure its closed when you are done
-	defer led.Close()
+	// disable all lights and close the device when you are done
+	defer led.FadeOutClose()
 
 	// fade to a full green in 500ms
 	d := 500 * time.Millisecond
@@ -32,7 +32,51 @@ func Example() {
 		panic(err)
 	}
 	fmt.Printf("%#v\n", color)
+}
 
-	// immediately set the color (0, 0, 0 effectively disables the led)
-	err = led.SetRGB(0, 0, 0)
+func ExampleSequence() {
+	led, err := blink.New()
+	if err != nil {
+		panic(err)
+	}
+
+	defer led.Close()
+
+	d := 500 * time.Millisecond
+	s := blink.NewSequence().
+		Fade(blink.Red, d).
+		Fade(blink.Green, d).
+		Fade(blink.Blue, d).
+		Off()
+
+	// blocks until s is done
+	err = s.Play(led)
+	if err != nil {
+		panic(err)
+	}
+}
+
+func ExampleSequenceLoop() {
+	led, err := blink.New()
+	if err != nil {
+		panic(err)
+	}
+
+	defer led.FadeOutClose()
+
+	d := 500 * time.Millisecond
+	police, c := blink.NewSequence().
+		Fade(blink.Red, d).
+		Fade(blink.Blue, d).
+		Loop()
+
+	go func() {
+		time.Sleep(3 * 2 * d)
+		close(c)
+	}()
+
+	err = police.Play(led)
+	if err != nil {
+		panic(err)
+	}
 }

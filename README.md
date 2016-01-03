@@ -45,8 +45,8 @@ if err != nil {
     panic(err)
 }
 
-// make sure its closed when you are done
-defer led.Close()
+// disable all lights and close the device when you are done
+defer led.FadeOutClose()
 
 // fade to a full green in 500ms
 d := 500 * time.Millisecond
@@ -63,9 +63,6 @@ if err != nil {
     panic(err)
 }
 fmt.Printf("%#v\n", color)
-
-// immediately set the color (0, 0, 0 effectively disables the led)
-err = led.SetRGB(0, 0, 0)
 ```
 
 ### Linux Permissions
