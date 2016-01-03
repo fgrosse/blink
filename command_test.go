@@ -22,6 +22,6 @@ func TestFadeRGBCommand(t *testing.T) {
 }
 
 func TestReadRGBCommand(t *testing.T) {
-	c := readRGBCommand{n:1}
+	c := readRGBCommand{n: 1}
 	assert.Equal(t, []byte{0x01, 'r', 0x00, 0x00, 0x00, 0x00, 0x00, 0x01}, c.bytes())
 }

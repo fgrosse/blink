@@ -3,12 +3,21 @@ package blink
 import (
 	"encoding/hex"
 	"fmt"
-	"strings"
 	"strconv"
+	"strings"
 
 	"github.com/hashicorp/go-multierror"
 )
 
+var (
+	Red    = Color{R: 255, G: 000, B: 000}
+	Green  = Color{R: 000, G: 255, B: 000}
+	Blue   = Color{R: 000, G: 000, B: 255}
+	Yellow = Color{R: 255, G: 255, B: 000}
+	White  = Color{R: 255, G: 255, B: 255}
+)
+
+// MustParseColor behaves exactly as ParseColor but panics if an error occurs.
 func MustParseColor(s string) Color {
 	c, err := ParseColor(s)
 	if err != nil {
@@ -18,6 +27,14 @@ func MustParseColor(s string) Color {
 	return c
 }
 
+// ParseColor parses a Color from string.
+// It accepts the RGB value either as comma separated vector
+// or in hexadecimal form with a leading hash tag.
+// Examples:
+//     255,255,0
+//     255, 255, 0
+//     #ffff00
+//     #FFFF00
 func ParseColor(s string) (c Color, err error) {
 	switch {
 	case len(s) == 0:
