@@ -83,7 +83,7 @@ func (l *LED) FadeOutClose(fadeDuration ...time.Duration) error {
 	if len(fadeDuration) > 0 {
 		l.FadeRGB(0, 0, 0, fadeDuration[0])
 	} else {
-		l.FadeRGB(0, 0, 0, 1 * time.Second)
+		l.FadeRGB(0, 0, 0, 1*time.Second)
 	}
 
 	return l.Close()

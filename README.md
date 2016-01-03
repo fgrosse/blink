@@ -23,8 +23,6 @@ blink is a go implementation for controlling [ThingM blink(1) USB dual RGB LEDs]
 - [ ] Get version
 - [ ] Test command
 
-Eventually all of the [available HID commands will be implemented][2]
-
 ## Installation
 
 Currently blink does only compile on **linux** and requires **[libusb-1.0.12][5] or higher**.
@@ -40,6 +38,7 @@ You need to have go version 1.4 or higher.
 
 ## Usage
 
+Simple usage
 ```go
 // connect to a local blink(1) USB device
 led, err := blink.New()
@@ -67,6 +66,51 @@ if err != nil {
 fmt.Printf("%#v\n", color)
 ```
 
+Create sequences to store and playback multiple instructions
+```go
+d := 500 * time.Millisecond
+s := blink.NewSequence().
+    Fade(blink.Red, d).
+    Fade(blink.Green, d).
+    Fade(blink.Blue, d).
+    Wait(1 * time.Second).
+    Off()
+
+// blocks until s is done
+err = s.Play(led)
+if err != nil {
+    panic(err)
+}
+```
+
+Sequences can be run in a loop. You can also loop multiple sections.
+```go
+firstLoop := blink.NewSequence().
+    Fade(blink.Red, 250*time.Millisecond).
+    Fade(blink.Blue, 250*time.Millisecond).
+    LoopN(2) // loops 2 times
+
+secondLoop := firstLoop.
+    Fade(blink.Green, 250*time.Millisecond).
+    LoopN(4) // loops 4 times starting at the first fade to red
+
+myBlue := blink.MustParseColor("#6666ff")
+entireLoop, c := secondLoop.
+    Start(). // instruct the next loop to start at this position
+    Set(myBlue, 200 * time.Millisecond).
+    Set(myBlue.Multiply(0.8), 200 * time.Millisecond).
+    Set(myBlue.Multiply(0.6), 200 * time.Millisecond).
+    Set(myBlue.Multiply(0.4), 200 * time.Millisecond).
+    Loop() // restarts the sequence until c is closed
+
+go func() {
+    // stop the whole loop after ten seconds
+    time.Sleep(10 * time.Second)
+    close(c)
+}()
+
+err = entireLoop.Play(led)
+```
 ### Linux Permissions
 
 You need to have root access when running this program or you will get the following error:

@@ -1,9 +1,9 @@
 package blink_test
 
 import (
+	"fmt"
 	"testing"
 
-	"fmt"
 	"github.com/fgrosse/blink"
 	"github.com/stretchr/testify/assert"
 )
