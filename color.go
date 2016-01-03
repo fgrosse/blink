@@ -17,6 +17,32 @@ var (
 	White  = Color{R: 255, G: 255, B: 255}
 )
 
+// Color contains the 24-bit RGB color information.
+type Color struct{ R, G, B byte }
+
+// Multiply returns a copy of c where every individual color channel is
+// multiplied with the given factor.
+// If f is lower than 0 it is ignored entirely and c is returned unchanged.
+func (c Color) Multiply(f float64) Color {
+	if f < 0 {
+		return c
+	}
+
+	return Color{
+		R: floatToByte(float64(c.R) * f),
+		G: floatToByte(float64(c.G) * f),
+		B: floatToByte(float64(c.B) * f),
+	}
+}
+
+func floatToByte(f float64) byte {
+	if f > 255 {
+		f = 255
+	}
+
+	return byte(f + 0.5)
+}
+
 // MustParseColor behaves exactly as ParseColor but panics if an error occurs.
 func MustParseColor(s string) Color {
 	c, err := ParseColor(s)

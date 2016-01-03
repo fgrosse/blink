@@ -20,9 +20,6 @@ const (
 // ErrNoDevice is the error that New() returns if no connected blink(1) device was found.
 var ErrNoDevice = errors.New("could not find blink1 device")
 
-// Color contains the 24-bit RGB color information.
-type Color struct{ R, G, B byte }
-
 // LED represents a locally connected blink(1) USB device.
 type LED struct {
 	*usbDevice
