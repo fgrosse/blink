@@ -56,7 +56,7 @@ func ExampleSequence() {
 	}
 }
 
-func ExampleSequenceLoop() {
+func ExampleSequence_Loop() {
 	led, err := blink.New()
 	if err != nil {
 		panic(err)
