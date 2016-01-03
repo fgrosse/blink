@@ -42,3 +42,27 @@ func TestMultiply(t *testing.T) {
 		assert.Equal(t, d.want, d.have.Multiply(d.m), fmt.Sprintf("%d: %+v * %.1f", i, d.have, d.m))
 	}
 }
+
+func TestAdd(t *testing.T) {
+	data := []struct{ have, add, want blink.Color }{
+		{
+			blink.Color{R: 0, G: 0, B: 0},
+			blink.Color{R: 0, G: 0, B: 0},
+			blink.Color{R: 0, G: 0, B: 0},
+		},
+		{
+			blink.Color{R: 10, G: 20, B: 30},
+			blink.Color{R: 0, G: 0, B: 0},
+			blink.Color{R: 10, G: 20, B: 30},
+		},
+		{
+			blink.Color{R: 10, G: 40, B: 100},
+			blink.Color{R: 20, G: 50, B: 200},
+			blink.Color{R: 30, G: 90, B: 255},
+		},
+	}
+
+	for i, d := range data {
+		assert.Equal(t, d.want, d.have.Add(d.add), fmt.Sprintf("%d: %+v + %+v", i, d.have, d.add))
+	}
+}

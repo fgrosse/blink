@@ -20,8 +20,27 @@ var (
 // Color contains the 24-bit RGB color information.
 type Color struct{ R, G, B byte }
 
+// Add returns a new color where every individual color channel is
+// the result of adding up the corresponding value of this color an the given color.
+// The maximum value of each color channel is always 0xFF (no overflows).
+func (c Color) Add(other Color) Color {
+	max := func(i int) byte {
+		if i > 255 {
+			i = 255
+		}
+		return byte(i)
+	}
+
+	return Color{
+		R: max(int(c.R) + int(other.R)),
+		G: max(int(c.G) + int(other.G)),
+		B: max(int(c.B) + int(other.B)),
+	}
+}
+
 // Multiply returns a copy of c where every individual color channel is
 // multiplied with the given factor.
+// The maximum value of each color channel is always 0xFF (no overflows).
 // If f is lower than 0 it is ignored entirely and c is returned unchanged.
 func (c Color) Multiply(f float64) Color {
 	if f < 0 {
