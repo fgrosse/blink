@@ -36,6 +36,11 @@ func (s *Sequence) Off() *Sequence {
 	return s.Set(Color{}, 0)
 }
 
+// OffFade adds a new frame to the sequence which deactivates the led over a given duration.
+func (s *Sequence) OffFade(d time.Duration) *Sequence {
+	return s.Fade(Color{}, d)
+}
+
 // Set adds a new frame to the sequence which immediately sets the led to another
 // color and waits a given duration.
 func (s *Sequence) Set(c Color, d time.Duration) *Sequence {
