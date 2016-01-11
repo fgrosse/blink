@@ -87,11 +87,15 @@ func (s *Sequence) Loop() (*Sequence, chan<- struct{}) {
 	return s, c
 }
 
+// LoopN is used to instruct the sequence to loop all previously added frames n times.
 func (s *Sequence) LoopN(n int) *Sequence {
 	s.frames = append(s.frames, &loopFrame{seq: s, n: n})
 	return s
 }
 
+// Start runs all frames of this sequence.
+// The function blocks until the sequence is done.
+// If the sequence contains a loop this function will not return until the loop was closed.
 func (s *Sequence) Start() *Sequence {
 	f := &startFrame{seq: s, n: len(s.frames)}
 	s.frames = append(s.frames, f)
