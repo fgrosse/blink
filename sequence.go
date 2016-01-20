@@ -103,6 +103,21 @@ func (s *Sequence) Start() *Sequence {
 	return s
 }
 
+// FadeFunc adds a frame that fades to a calculated color each time it is ran.
+// The color function is called each time the frame is ran.
+// Example usage:
+//     FadeFunc(blink.RandomColor, 100*time.Millisecond)
+func (s *Sequence) FadeFunc(f func() Color, d time.Duration) *Sequence {
+	s.frames = append(s.frames, &fadeFuncFrame{
+		Duration: d,
+		fun: func() command {
+			return &fadeRGBCommand{Color: f(), duration: d}
+		},
+	})
+
+	return s
+}
+
 // Play starts to playback this sequence on the given LED.
 // It blocks until all frames have been processed.
 // If this sequence loops Play will never return by itself.
@@ -176,5 +191,20 @@ type startFrame struct {
 func (f *startFrame) run(led *LED) error {
 	f.seq.frames = f.seq.frames[f.n+1:]
 	f.seq.i = 0
+	return nil
+}
+
+type fadeFuncFrame struct {
+	time.Duration
+	fun func() command
+}
+
+func (f *fadeFuncFrame) run(led *LED) error {
+	_, err := led.write(f.fun())
+	if err != nil {
+		return err
+	}
+
+	time.Sleep(f.Duration)
 	return nil
 }

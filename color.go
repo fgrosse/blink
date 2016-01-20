@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"github.com/hashicorp/go-multierror"
+	"math/rand"
 )
 
 var (
@@ -133,4 +134,12 @@ func parseColorFromCSV(s string) (Color, error) {
 	}
 
 	return c, nil
+}
+
+func RandomColor() Color {
+	return Color{
+		R: byte(rand.Int31n(265)),
+		G: byte(rand.Int31n(265)),
+		B: byte(rand.Int31n(265)),
+	}
 }
