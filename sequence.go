@@ -93,9 +93,10 @@ func (s *Sequence) LoopN(n int) *Sequence {
 	return s
 }
 
-// Start runs all frames of this sequence.
-// The function blocks until the sequence is done.
-// If the sequence contains a loop this function will not return until the loop was closed.
+// Start adds a start frame as marker for all subsequent loop frames.
+// If the sequence is restarted due to a loop it will begin at the
+// last start frame that was found or at the very beginning if no start
+// frame exists.
 func (s *Sequence) Start() *Sequence {
 	f := &startFrame{seq: s, n: len(s.frames)}
 	s.frames = append(s.frames, f)
